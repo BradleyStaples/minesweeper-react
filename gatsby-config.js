@@ -1,7 +1,10 @@
 module.exports = {
   siteMetadata: {
-    siteUrl: "https://www.yourdomain.tld",
-    title: "Minesweeper",
+    siteUrl: 'https://minesweeper.bradleystaples.com',
+    title: 'Minesweeper',
   },
-  plugins: ["gatsby-plugin-sass"],
+  plugins: [
+    'gatsby-plugin-react-helmet',
+    'gatsby-plugin-sass'
+  ]
 };
