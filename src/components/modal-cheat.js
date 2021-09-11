@@ -1,10 +1,7 @@
 import React from 'react';
 import Modali, { useModali } from 'modali';
 
-const CheatButtonAndModal = ({
-  gameStatus,
-  setisCheating
-}) => {
+const CheatButtonAndModal = ({ gameStatus, setisCheating }) => {
 
   let buttons = [
     <Modali.Button
