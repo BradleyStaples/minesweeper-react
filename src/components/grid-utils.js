@@ -29,17 +29,17 @@ const _plantMine = (cell) => {
   return true;
 };
 
-const randomizeMines = (tempRows, mineNumber) => {
+const randomizeMines = (tempRows, numMines) => {
   let minesPlanted = 0;
   let gridSize = tempRows.length;
-  while (minesPlanted < mineNumber) {
+  while (minesPlanted < numMines) {
     // get a random row (r) and col (c) coordinate from 0 to gridSize-1
     let r = Math.floor(Math.random() * gridSize);
     let c = Math.floor(Math.random() * gridSize);
     // plantMine() returns true if a mine was not already planted (while planting the mine),
     // otherwise returns false if a mine already exists in that cell
     if (_plantMine(tempRows[r][c])) {
-      console.log('mine planted at: ', r, c, '\n   mines remaining: ', mineNumber - minesPlanted);
+      console.log('mine planted at: ', r, c, '\n   mines remaining: ', numMines - minesPlanted);
       minesPlanted += 1;
     }
   }

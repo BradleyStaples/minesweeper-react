@@ -4,7 +4,7 @@ import Modali, { useModali } from 'modali';
 const NewGameButtonAndModal = ({
   gameSize,
   onGameSizeChange,
-  mineNumber,
+  numMines,
   onMineNumberChange,
   onGameStart
 }) => {
@@ -51,7 +51,7 @@ const NewGameButtonAndModal = ({
           </label>
           <label>
             <span># of Mines:</span>
-            <input type='number' className='mineNumber' value={mineNumber} onChange={onMineNumberChange} />
+            <input type='number' className='numMines' value={numMines} onChange={onMineNumberChange} />
           </label>
         </div>
       </Modali.Modal>

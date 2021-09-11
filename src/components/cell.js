@@ -1,16 +1,19 @@
 import React from 'react';
 import classnames from 'classnames';
 
-const Cell = ({ rowIndex, cellIndex, revealed, bombed, flagged, surroundingMines, onCellClick }) => {
+const Cell = ({ rowIndex, cellIndex, revealed, bombed, flagged, gameStatus, surroundingMines, onCellClick }) => {
 
   const clickHandler = (event) => {
-    if (revealed) {
+    if (revealed || gameStatus === 'win' || gameStatus === 'lose') {
       return false;
     }
     onCellClick(rowIndex, cellIndex);
   };
 
   const rightClickHandler = (event) => {
+    if (revealed || gameStatus === 'win' || gameStatus === 'lose') {
+      return false;
+    }
     event.preventDefault(); // prevent browser context menu
     onCellClick(rowIndex, cellIndex, true);
   };
