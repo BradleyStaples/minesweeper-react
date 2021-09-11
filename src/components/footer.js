@@ -7,7 +7,7 @@ const Footer = () => {
       <br /><hr />
       <p className='center'>
         <br />Created by<br />
-        <a className='credit' href='https://bradleystapes.com'>Bradley Staples</a>
+        <a className='credit' href='https://bradleystaples.com'>Bradley Staples</a>
       </p>
     </footer>
   );
