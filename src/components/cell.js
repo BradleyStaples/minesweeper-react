@@ -1,11 +1,25 @@
 import React from 'react';
 import classnames from 'classnames';
 
-const Cell = ({ rowIndex, cellIndex, revealed, bombed, flagged, gameStatus, surroundingMines, onCellClick }) => {
+const Cell = ({
+  rowIndex,
+  cellIndex,
+  revealed,
+  mined,
+  flagged,
+  cheated,
+  gameStatus,
+  surroundingMines,
+  onCellClick,
+  updateGameStatus
+}) => {
 
   const clickHandler = (event) => {
     if (revealed || gameStatus === 'win' || gameStatus === 'lose') {
       return false;
+    }
+    if (mined) {
+      updateGameStatus('lose');
     }
     onCellClick(rowIndex, cellIndex);
   };
@@ -20,18 +34,19 @@ const Cell = ({ rowIndex, cellIndex, revealed, bombed, flagged, gameStatus, surr
 
   const buttonClasses = classnames({
     cellButton: true,
+    cheated: !revealed && cheated,
     unknown: !revealed && !flagged,
     'sprite flagged': !revealed && flagged,
     empty: revealed && surroundingMines === 0,
-    'sprite mined': revealed && bombed,
-    'sprite one': revealed && !bombed && surroundingMines === 1,
-    'sprite two': revealed && !bombed && surroundingMines === 2,
-    'sprite three': revealed && !bombed && surroundingMines === 3,
-    'sprite four': revealed && !bombed && surroundingMines === 4,
-    'sprite five': revealed && !bombed && surroundingMines === 5,
-    'sprite six': revealed && !bombed && surroundingMines === 6,
-    'sprite seven': revealed && !bombed && surroundingMines === 7,
-    'sprite eight': revealed && !bombed && surroundingMines === 8
+    'sprite mined': revealed && mined,
+    'sprite one': revealed && !mined && surroundingMines === 1,
+    'sprite two': revealed && !mined && surroundingMines === 2,
+    'sprite three': revealed && !mined && surroundingMines === 3,
+    'sprite four': revealed && !mined && surroundingMines === 4,
+    'sprite five': revealed && !mined && surroundingMines === 5,
+    'sprite six': revealed && !mined && surroundingMines === 6,
+    'sprite seven': revealed && !mined && surroundingMines === 7,
+    'sprite eight': revealed && !mined && surroundingMines === 8
   });
 
   return (

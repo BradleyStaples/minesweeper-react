@@ -1,3 +1,16 @@
+// directions in x/y coordinates for each adjacent cell
+// for reference: 0, 0 is the cell itself
+const directions = [
+  { c: -1, r: +0 },	// left center
+  { c: -1, r: +1 },	// top left
+  { c: +0, r: +1 },	// top center
+  { c: +1, r: +1 },	// top right
+  { c: +1, r: +0 },	// right center
+  { c: +1, r: -1 },	// bottom right
+  { c: +0, r: -1 },	// bottom center
+  { c: -1, r: -1 }	// bottom left;
+];
+
 const createRows = (gameSize) => {
   let tempRows = [];
   let i;
@@ -7,8 +20,9 @@ const createRows = (gameSize) => {
     for (j = 0; j < gameSize; j++) {
       let cell = {
         revealed: false,
-        bombed: false,
+        mined: false,
         flagged: false,
+        cheated: false,
         surroundingMines: 0
       };
       tempRow.push(cell);
@@ -19,13 +33,13 @@ const createRows = (gameSize) => {
 };
 
 const _plantMine = (cell) => {
-  if (!cell || !cell.hasOwnProperty('bombed')) {
+  if (!cell || !cell.hasOwnProperty('mined')) {
     return false;
   }
-  if (cell.bombed) {
+  if (cell.mined) {
     return false;
   }
-  cell.bombed = true;
+  cell.mined = true;
   return true;
 };
 
@@ -53,7 +67,7 @@ const _getCell = (tempRows, r, c, direction) => {
     // verify that the array element exists
     if (tempRows[newRow][newCell]) {
       // return the array element
-      return tempRows[newRow][newCell].bombed;
+      return tempRows[newRow][newCell];
     }
   }
   // no array element was found, return null
@@ -61,26 +75,13 @@ const _getCell = (tempRows, r, c, direction) => {
 };
 
 const calculateNearbyMines = (tempRows) => {
-  // directions in x/y coordinates for each adjacent cell
-  // for reference: 0, 0 is the cell itself
-  let directions = [
-    { c: -1, r: +0 },	// left center
-    { c: -1, r: +1 },	// top left
-    { c: +0, r: +1 },	// top center
-    { c: +1, r: +1 },	// top right
-    { c: +1, r: +0 },	// right center
-    { c: +1, r: -1 },	// bottom right
-    { c: +0, r: -1 },	// bottom center
-    { c: -1, r: -1 }	// bottom left;
-  ];
-
   let surroundingMines;
   tempRows.forEach((row, rowIndex) => {
     row.forEach((cell, cellIndex) => {
       surroundingMines = 0;
       directions.forEach((direction, directionIndex) => {
         let cell = _getCell(tempRows, rowIndex, cellIndex, direction);
-        if (cell) {
+        if (cell && cell.mined) {
           surroundingMines += 1;
         }
       });
@@ -89,8 +90,49 @@ const calculateNearbyMines = (tempRows) => {
   });
 };
 
+const revealEmptyCells = (tempRows, rowIndex, cellIndex) => {
+  // since adjacent cells next to the edge can be 'off' the game board,
+  // make sure cell is within range. return if not to halt recursive calls
+  if (rowIndex < 0 || rowIndex >= tempRows.length || cellIndex < 0 || cellIndex >= tempRows.length) {
+    return;
+  }
+  let thisCellDirection = {
+    r: 0,
+    c: 0
+  };
+  let cell = _getCell(tempRows, rowIndex, cellIndex, thisCellDirection);
+  if (cell.revealed || cell.flagged || cell.mined || cell.surroundingMines > 0) {
+    return;
+  }
+  cell.revealed = true;
+  // recursively call each cell adjacent to this cell
+  // (which will in turn recursively call cells adjacent to all of these adjacent cells, etc)
+  directions.forEach((direction) => {
+    revealEmptyCells(tempRows, rowIndex + direction.r, cellIndex + direction.c);
+  });
+};
+
+const enableCheating = (tempRows) => {
+  let thisCellDirection = {
+    r: 0,
+    c: 0
+  };
+  let rowIndex;
+  for (rowIndex = 0; rowIndex < tempRows.length; rowIndex++) {
+    let cellIndex;
+    for (cellIndex = 0; cellIndex < tempRows.length; cellIndex++) {
+      let cell = _getCell(tempRows, rowIndex, cellIndex, thisCellDirection);
+      if (cell.mined) {
+        cell.cheated = true;
+      }
+    }
+  }
+};
+
 export {
   createRows,
   randomizeMines,
-  calculateNearbyMines
+  calculateNearbyMines,
+  revealEmptyCells,
+  enableCheating
 };

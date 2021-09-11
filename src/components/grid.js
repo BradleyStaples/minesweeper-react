@@ -2,21 +2,48 @@ import React, { useEffect, useState } from 'react';
 import classnames from 'classnames';
 
 import Cell from './cell';
-import { createRows, randomizeMines, calculateNearbyMines } from './grid-utils';
+import {
+  createRows,
+  randomizeMines,
+  calculateNearbyMines,
+  revealEmptyCells,
+  enableCheating
+} from './grid-utils';
 
-const Grid = ({ gameStatus, gameSize, numMines, incrementClicks, updateFlags }) => {
+const Grid = ({
+  updateGrid,
+  gameStatus,
+  gameSize,
+  numMines,
+  isCheating,
+  setisCheating,
+  incrementClicks,
+  updateFlags,
+  updateGameStatus,
+  resetGame
+}) => {
 
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    if (gameStatus === 'playing') {
+    if (gameStatus === 'playing' && updateGrid) {
       let tempRows = createRows(gameSize);
       randomizeMines(tempRows, numMines);
       calculateNearbyMines(tempRows);
       setRows(tempRows);
-      // reset stats
+      resetGame();
     }
-  }, [gameStatus, gameSize, numMines]);
+  }, [gameStatus, gameSize, numMines, updateGrid, resetGame]);
+
+  useEffect(() => {
+    if (isCheating) {
+      let newRows = rows.slice(0);
+      enableCheating(newRows);
+      setRows(newRows);
+      setisCheating(false);
+    }
+
+  }, [isCheating, rows]);
 
   const onCellClick = (rowIndex, cellIndex, toggleFlag) => {
     let newRows = rows.slice(0);
@@ -27,8 +54,14 @@ const Grid = ({ gameStatus, gameSize, numMines, incrementClicks, updateFlags }) 
       updateFlags(newStatus);
       cell.flagged = newStatus;
     } else {
-      // was a left click, revel the cell
-      cell.revealed = true;
+      // was a left click
+      if (cell.surroundingMines !== 0) {
+        // reveal only this one cell, as it's not "empty"
+        cell.revealed = true;
+      } else {
+        // cell is empty, reveal the cell and contiguous empty cells as well
+        revealEmptyCells(newRows, rowIndex, cellIndex)
+      }
     }
     setRows(newRows);
     incrementClicks();
@@ -53,11 +86,13 @@ const Grid = ({ gameStatus, gameSize, numMines, incrementClicks, updateFlags }) 
                     rowIndex={rowIndex}
                     cellIndex={cellIndex}
                     revealed={cell.revealed}
-                    bombed={cell.bombed}
+                    mined={cell.mined}
                     flagged={cell.flagged}
+                    cheated={cell.cheated}
                     gameStatus={gameStatus}
                     surroundingMines={cell.surroundingMines}
                     onCellClick={onCellClick}
+                    updateGameStatus={updateGameStatus}
                   />
                 );
               })}

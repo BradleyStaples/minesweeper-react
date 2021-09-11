@@ -8,7 +8,9 @@ import useInterval from './use-interval';
 const Game = () => {
   const secondsCounter = useRef();
 
+  const [updateGrid, setUpdateGrid] = useState(false);
   const [gameStatus, setGameStatus] = useState('');
+  const [isCheating, setisCheating] = useState(false);
   const [gameSize, setGameSize] = useState(8);
   const [numMines, setNumMines] = useState(8);
   const [numClicks, setNumClicks] = useState(0);
@@ -25,9 +27,10 @@ const Game = () => {
   useEffect(() => {
     if (numFlags === numMines) {
       // TODO: calculate win or loss
-      setGameStatus('win');
+      updateGameStatus('win');
+      // updateGameStatus('lose');
     }
-  }, [numFlags]);
+  }, [numFlags, numMines]);
 
   secondsCounter.current = useInterval(() => {
     setNumSeconds(numSeconds => numSeconds + 1);
@@ -44,8 +47,8 @@ const Game = () => {
     setNumMines(v);
   };
 
-  const onGameStart = () => {
-    setGameStatus('playing');
+  const updateGameStatus = (status) => {
+    setGameStatus(status);
   };
 
   const incrementClicks = () => {
@@ -60,25 +63,46 @@ const Game = () => {
     }
   };
 
+  const resetGame = () => {
+    setNumClicks(0);
+    setNumSeconds(0);
+    setNumFlags(0);
+    setUpdateGrid(false);
+    setisCheating(false);
+  };
+
   const newGameModalData = {
     gameSize,
     onGameSizeChange,
     numMines,
     onMineNumberChange,
-    onGameStart
+    updateGameStatus,
+    setUpdateGrid
+  };
+
+  const cheatModalData = {
+    gameStatus,
+    setisCheating
   };
 
   return (
     <div>
       <Menu
         newGameModalData={newGameModalData}
+        cheatModalData={cheatModalData}
       />
       <Grid
+        updateGrid={updateGrid}
+        setUpdateGrid={setUpdateGrid}
         gameStatus={gameStatus}
         gameSize={gameSize}
         numMines={numMines}
+        isCheating={isCheating}
+        setisCheating={setisCheating}
         incrementClicks={incrementClicks}
         updateFlags={updateFlags}
+        updateGameStatus={updateGameStatus}
+        resetGame={resetGame}
       />
       <Stats
         gameStatus={gameStatus}

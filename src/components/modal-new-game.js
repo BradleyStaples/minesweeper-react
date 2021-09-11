@@ -6,7 +6,8 @@ const NewGameButtonAndModal = ({
   onGameSizeChange,
   numMines,
   onMineNumberChange,
-  onGameStart
+  updateGameStatus,
+  setUpdateGrid
 }) => {
 
   const [newGameModal, toggleNewGameModal] = useModali({
@@ -25,17 +26,18 @@ const NewGameButtonAndModal = ({
         isStyleDefault
         onClick={() => onContinue()}
       />,
-    ],
+    ]
   });
 
   const onContinue = function (event) {
-    onGameStart();
+    updateGameStatus('playing');
     toggleNewGameModal();
+    setUpdateGrid(true);
   };
 
   return (
     <div className='menu-item'>
-      <button className='button start' onClick={toggleNewGameModal}>
+      <button className='button' onClick={toggleNewGameModal}>
         <span className='sprite new'></span> New Game
       </button>
       <Modali.Modal {...newGameModal}>

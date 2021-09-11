@@ -1,25 +1,24 @@
 import React from 'react';
 
 import NewGameButtonAndModal from './modal-new-game';
+import CheatButtonAndModal from './modal-cheat';
 
-const Menu = ({ newGameModalData }) => {
+const Menu = ({ newGameModalData, cheatModalData }) => {
 
   return (
     <nav className='menu'>
       <NewGameButtonAndModal {...newGameModalData} />
-      <button className='button save'>
+      <button className='button'>
         <span className='sprite saver'></span> Save Game
       </button>
-      <button className='button load'>
+      <button className='button'>
         <span className='sprite loader'></span> Load Game
       </button>
-      <button className='button cheat'>
-        <span className='sprite cheater'></span> Cheat
-      </button>
-      <button className='button help'>
+      <CheatButtonAndModal {...cheatModalData} />
+      <button className='button'>
         <span className='sprite helper'></span> Help
       </button>
-      <button className='button validate'>
+      <button className='button'>
         <span className='sprite smiley'></span> Validate
       </button>
 

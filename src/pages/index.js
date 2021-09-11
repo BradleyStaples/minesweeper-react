@@ -22,24 +22,7 @@ export default IndexPage;
 
 
 
-// < !DOCTYPE html >
-//   <html>
 
-
-//       <script id='modal-start' type='custom/template'>
-//         <h2><strong>NEW GAME</strong></h2>
-//         <p>Choose a game size and the number of mines you want in your grid, and then enjoy!</p><br />
-//         <label>Game Size:</label>
-//         <select className='gamesize'>
-//           <option value='1'>8x8</option>
-//           <option value='2'>16x16</option>
-//           <option value='4'>32x32</option>
-//         </select><br />
-//         <label># of Mines:</label>
-//         <input type='number' className='minenumber' value='8' /><br />
-//         <button className='button modal-close'>Cancel</button>
-//         <button className='button modal-continue'>Continue</button>
-//       </script>
 //       <script id='modal-help' type='custom/template'>
 //         <h2><strong>HELP</strong></h2>
 //         <p><strong>Click</strong> a cell to uncover it. <strong>Shift-click</strong> a cell to flag that cell a holding a mine. <strong>Shift-click</strong> again on
@@ -62,10 +45,3 @@ export default IndexPage;
 //         <p>{{ message }}</p>
 //         <button className='button modal-close'>Close</button>
 //       </script>
-//       <script id='grid-td' type='custom/template'>
-//         <td data-row='{{row}}' data-col='{{col}}' className='{{class}}'></td>
-//       </script>
-//       <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
-//       <script src='js/minesweeper.js'></script>
-//     </body>
-//   </html>
