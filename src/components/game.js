@@ -24,14 +24,6 @@ const Game = () => {
     }
   }, [gameStatus]);
 
-  useEffect(() => {
-    if (numFlags === numMines) {
-      // TODO: calculate win or loss
-      updateGameStatus('win');
-      // updateGameStatus('lose');
-    }
-  }, [numFlags, numMines]);
-
   secondsCounter.current = useInterval(() => {
     setNumSeconds(numSeconds => numSeconds + 1);
   }, gameStatus === 'playing' ? 1000 : null);
@@ -97,6 +89,7 @@ const Game = () => {
         gameStatus={gameStatus}
         gameSize={gameSize}
         numMines={numMines}
+        numFlags={numFlags}
         isCheating={isCheating}
         setisCheating={setisCheating}
         incrementClicks={incrementClicks}

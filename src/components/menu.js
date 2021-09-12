@@ -17,10 +17,6 @@ const Menu = ({ newGameModalData, cheatModalData }) => {
       </button>
       <CheatButtonAndModal {...cheatModalData} />
       <HelpButtonAndModal />
-      <button className='button'>
-        <span className='sprite smiley'></span> Validate
-      </button>
-
     </nav>
   );
 };

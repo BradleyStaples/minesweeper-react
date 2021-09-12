@@ -8,6 +8,7 @@ const Cell = ({
   mined,
   flagged,
   cheated,
+  missed,
   gameStatus,
   surroundingMines,
   onCellClick,
@@ -35,6 +36,7 @@ const Cell = ({
   const buttonClasses = classnames({
     cellButton: true,
     cheated: !revealed && cheated,
+    miss: missed,
     unknown: !revealed && !flagged,
     'sprite flagged': !revealed && flagged,
     empty: revealed && surroundingMines === 0,

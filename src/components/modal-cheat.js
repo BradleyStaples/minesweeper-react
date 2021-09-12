@@ -52,7 +52,7 @@ const CheatButtonAndModal = ({ gameStatus, setisCheating }) => {
               <h2><strong>Are you sure?</strong></h2>
               <p>Cheating is a dirty habit, you know.</p>
               <p>
-                If you're sure you want to cheat, I won't tell... All cells that contain mines will be outlined in red so you won't get your cheating dainty hands dirty.
+                If you're sure you want to cheat, I won't tell… All cells that contain mines will be outlined in red so you won't get your cheating hands dirty.
               </p>
             </div>
           :

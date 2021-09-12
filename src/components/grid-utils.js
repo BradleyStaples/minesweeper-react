@@ -23,6 +23,7 @@ const createRows = (gameSize) => {
         mined: false,
         flagged: false,
         cheated: false,
+        missed: false,
         surroundingMines: 0
       };
       tempRow.push(cell);
@@ -53,7 +54,6 @@ const randomizeMines = (tempRows, numMines) => {
     // plantMine() returns true if a mine was not already planted (while planting the mine),
     // otherwise returns false if a mine already exists in that cell
     if (_plantMine(tempRows[r][c])) {
-      console.log('mine planted at: ', r, c, '\n   mines remaining: ', numMines - minesPlanted);
       minesPlanted += 1;
     }
   }
@@ -129,10 +129,77 @@ const enableCheating = (tempRows) => {
   }
 };
 
+const validateAllMinesFlagged = (tempRows) => {
+  let thisCellDirection = {
+    r: 0,
+    c: 0
+  };
+  let gameStatus = 'win';
+  let rowIndex;
+  for (rowIndex = 0; rowIndex < tempRows.length; rowIndex++) {
+    let cellIndex;
+    for (cellIndex = 0; cellIndex < tempRows.length; cellIndex++) {
+      let cell = _getCell(tempRows, rowIndex, cellIndex, thisCellDirection);
+      if (cell.mined && !cell.flagged) {
+        cell.revealed = true;
+        cell.missed = true;
+        gameStatus = 'lose';
+      }
+      if (cell.flagged && !cell.mined) {
+        cell.missed = true;
+        gameStatus = 'lose';
+      }
+    }
+  }
+  return gameStatus;
+};
+
+const countRevealedCells = (tempRows) => {
+  let thisCellDirection = {
+    r: 0,
+    c: 0
+  };
+  let count = 0;
+  let rowIndex;
+  for (rowIndex = 0; rowIndex < tempRows.length; rowIndex++) {
+    let cellIndex;
+    for (cellIndex = 0; cellIndex < tempRows.length; cellIndex++) {
+      let cell = _getCell(tempRows, rowIndex, cellIndex, thisCellDirection);
+      if (cell.revealed) {
+        count += 1;
+      }
+    }
+  }
+  return count;
+};
+
+const validateAllUnminedCellsRevealed = (tempRows) => {
+  let thisCellDirection = {
+    r: 0,
+    c: 0
+  };
+  let gameStatus = 'win';
+  let rowIndex;
+  for (rowIndex = 0; rowIndex < tempRows.length; rowIndex++) {
+    let cellIndex;
+    for (cellIndex = 0; cellIndex < tempRows.length; cellIndex++) {
+      let cell = _getCell(tempRows, rowIndex, cellIndex, thisCellDirection);
+      if (!cell.mined && !cell.revealed) {
+        cell.missed = true;
+        gameStatus = 'lose';
+      }
+    }
+  }
+  return gameStatus;
+};
+
 export {
   createRows,
   randomizeMines,
   calculateNearbyMines,
   revealEmptyCells,
-  enableCheating
+  enableCheating,
+  validateAllMinesFlagged,
+  countRevealedCells,
+  validateAllUnminedCellsRevealed
 };

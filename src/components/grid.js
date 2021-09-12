@@ -7,7 +7,10 @@ import {
   randomizeMines,
   calculateNearbyMines,
   revealEmptyCells,
-  enableCheating
+  enableCheating,
+  validateAllMinesFlagged,
+  countRevealedCells,
+  validateAllUnminedCellsRevealed
 } from './grid-utils';
 
 const Grid = ({
@@ -15,6 +18,7 @@ const Grid = ({
   gameStatus,
   gameSize,
   numMines,
+  numFlags,
   isCheating,
   setisCheating,
   incrementClicks,
@@ -36,14 +40,36 @@ const Grid = ({
   }, [gameStatus, gameSize, numMines, updateGrid, resetGame]);
 
   useEffect(() => {
+    if (gameStatus === 'playing' && numFlags === numMines) {
+      let newRows = rows.slice(0);
+      let gameStatus = validateAllMinesFlagged(newRows);
+      setRows(newRows);
+      updateGameStatus(gameStatus);
+    }
+  }, [gameSize, numMines]);
+
+  useEffect(() => {
+    if (gameStatus === 'playing') {
+      let newRows = rows.slice(0);
+      let numRevealed = countRevealedCells(newRows);
+      let totalCells = gameSize * gameSize;
+      let numUnmined = totalCells - numMines;
+      if (numRevealed === numUnmined) {
+        let gameStatus = validateAllUnminedCellsRevealed(newRows);
+        updateGameStatus(gameStatus);
+        setRows(newRows);
+      }
+    }
+  }, [gameStatus, gameSize, numMines, rows]);
+
+  useEffect(() => {
     if (isCheating) {
       let newRows = rows.slice(0);
       enableCheating(newRows);
       setRows(newRows);
       setisCheating(false);
     }
-
-  }, [isCheating, rows]);
+  }, [isCheating, rows, setisCheating]);
 
   const onCellClick = (rowIndex, cellIndex, toggleFlag) => {
     let newRows = rows.slice(0);
@@ -65,7 +91,6 @@ const Grid = ({
     }
     setRows(newRows);
     incrementClicks();
-    console.log('cell clicked at: ', rowIndex, cellIndex, '\n  cellData: ', cell);
   };
 
   const gridClasses = classnames({
@@ -89,6 +114,7 @@ const Grid = ({
                     mined={cell.mined}
                     flagged={cell.flagged}
                     cheated={cell.cheated}
+                    missed={cell.missed}
                     gameStatus={gameStatus}
                     surroundingMines={cell.surroundingMines}
                     onCellClick={onCellClick}
