@@ -16,6 +16,7 @@ const Game = () => {
   const [numClicks, setNumClicks] = useState(0);
   const [numSeconds, setNumSeconds] = useState(0);
   const [numFlags, setNumFlags] = useState(0);
+  const [rows, setRows] = useState([]);
 
   useEffect(() => {
     if (gameStatus === 'win' || gameStatus === 'lose') {
@@ -55,6 +56,32 @@ const Game = () => {
     }
   };
 
+  const getSaveData = () => {
+    return {
+      updateGrid,
+      gameStatus,
+      isCheating,
+      gameSize,
+      numMines,
+      numClicks,
+      numSeconds,
+      numFlags,
+      rows
+    };
+  };
+
+  const setSavedData = (savedData) => {
+    setUpdateGrid(savedData.updateGrid);
+    setGameStatus(savedData.gameStatus);
+    setisCheating(savedData.isCheating);
+    setGameSize(savedData.gameSize);
+    setNumMines(savedData.numMines);
+    setNumClicks(savedData.numClicks);
+    setNumSeconds(savedData.numSeconds);
+    setNumFlags(savedData.numFlags);
+    setRows(savedData.rows);
+  };
+
   const resetGame = () => {
     setNumClicks(0);
     setNumSeconds(0);
@@ -77,11 +104,23 @@ const Game = () => {
     setisCheating
   };
 
+  const saveModalData = {
+    gameStatus,
+    getSaveData
+  };
+
+  const loadModalData = {
+    gameStatus,
+    setSavedData
+  };
+
   return (
     <div>
       <Menu
         newGameModalData={newGameModalData}
         cheatModalData={cheatModalData}
+        saveModalData={saveModalData}
+        loadModalData={loadModalData}
       />
       <Grid
         updateGrid={updateGrid}
@@ -96,6 +135,8 @@ const Game = () => {
         updateFlags={updateFlags}
         updateGameStatus={updateGameStatus}
         resetGame={resetGame}
+        rows={rows}
+        setRows={setRows}
       />
       <Stats
         gameStatus={gameStatus}

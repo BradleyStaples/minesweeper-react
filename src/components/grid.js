@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import classnames from 'classnames';
 
 import Cell from './cell';
@@ -24,10 +24,10 @@ const Grid = ({
   incrementClicks,
   updateFlags,
   updateGameStatus,
-  resetGame
+  resetGame,
+  rows,
+  setRows
 }) => {
-
-  const [rows, setRows] = useState([]);
 
   useEffect(() => {
     if (gameStatus === 'playing' && updateGrid) {
@@ -37,6 +37,7 @@ const Grid = ({
       setRows(tempRows);
       resetGame();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameStatus, gameSize, numMines, updateGrid, resetGame]);
 
   useEffect(() => {
@@ -46,6 +47,7 @@ const Grid = ({
       setRows(newRows);
       updateGameStatus(gameStatus);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameSize, numMines]);
 
   useEffect(() => {
@@ -60,6 +62,7 @@ const Grid = ({
         setRows(newRows);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameStatus, gameSize, numMines, rows]);
 
   useEffect(() => {
@@ -69,6 +72,7 @@ const Grid = ({
       setRows(newRows);
       setisCheating(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCheating, rows, setisCheating]);
 
   const onCellClick = (rowIndex, cellIndex, toggleFlag) => {
@@ -82,7 +86,10 @@ const Grid = ({
     } else {
       // was a left click
       if (cell.surroundingMines !== 0) {
-        // reveal only this one cell, as it's not "empty"
+        // reveal only this one cell, as its not "empty"
+        cell.revealed = true;
+      } else if (cell.mined) {
+        // reveal only this one cell, as its mined
         cell.revealed = true;
       } else {
         // cell is empty, reveal the cell and contiguous empty cells as well
