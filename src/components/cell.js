@@ -19,7 +19,6 @@ const Cell = ({
     if (revealed || gameStatus === 'win' || gameStatus === 'lose') {
       return false;
     }
-    console.log({revealed, mined, flagged, cheated, missed, surroundingMines}, 'cell clicked at: ', rowIndex, cellIndex);
     if (mined) {
       updateGameStatus('lose');
     }

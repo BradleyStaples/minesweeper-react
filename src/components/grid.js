@@ -41,6 +41,7 @@ const Grid = ({
   }, [gameStatus, gameSize, numMines, updateGrid, resetGame]);
 
   useEffect(() => {
+    console.log({ gameStatus, numFlags, numMines}, 'inside useEffect');
     if (gameStatus === 'playing' && numFlags === numMines) {
       let newRows = rows.slice(0);
       let gameStatus = validateAllMinesFlagged(newRows);
@@ -48,7 +49,7 @@ const Grid = ({
       updateGameStatus(gameStatus);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameSize, numMines]);
+  }, [gameStatus, gameSize, numMines, numFlags]);
 
   useEffect(() => {
     if (gameStatus === 'playing') {
